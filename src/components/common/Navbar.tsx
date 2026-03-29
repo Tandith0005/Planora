@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Link from "next/link";
@@ -7,12 +8,26 @@ import { Menu, X, Bell, LogOut, LayoutDashboard, ChevronDown, Loader2 } from "lu
 import toast from "react-hot-toast";
 import { useAuth } from "@/src/hooks/useAuth";
 import Image from "next/image";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getMyNotifications, markAllNotificationsAsRead } from "@/src/services/notification.service";
 
 export default function Navbar() {
   const { user, isAuthenticated, isPending, logout } = useAuth();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const queryClient = useQueryClient();
+
+  // Fetch unread notifications count
+  const { data: notifData } = useQuery({
+    queryKey: ["notifications-count"],
+    queryFn: () => getMyNotifications(1, 10),
+    enabled: isAuthenticated,
+    refetchInterval: 30000,        // Refresh every 30 seconds
+    staleTime: 10000,
+  });
+
+  const unreadCount = notifData?.data?.filter((n: any) => !n.isRead).length ?? 0;
 
   const handleLogout = async () => {
     try {
@@ -91,10 +106,15 @@ export default function Navbar() {
               <>
                 {/* Notifications */}
                 <Link
-                  href="/dashboard"
-                  className="w-9 h-9 rounded-lg flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/5 transition-all"
+                  href="/notifications"
+                  className="relative w-9 h-9 rounded-lg flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/5 transition-all"
                 >
                   <Bell className="w-4 h-4" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none">
+                      {unreadCount > 9 ? "9+" : unreadCount}
+                    </span>
+                  )}
                 </Link>
 
                 {/* User dropdown */}

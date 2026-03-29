@@ -22,7 +22,7 @@ export const getAllEvents = async (params?: EventQueryParams) => {
 
 export const getSingleEvent = async (id: string) => {
   try {
-    const res = await axiosInstance.get(`/events/${id}`);
+    const res = await axiosInstance.get(`/v1/events/${id}`);
     return res.data;
   } catch (error) {
     throw error;

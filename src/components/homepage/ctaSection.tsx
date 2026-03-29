@@ -51,7 +51,7 @@ export default function CTASection() {
               {/* Left copy */}
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold mb-6">
-                  ✦ Start Today — It's Free
+                  ✦ Start Today — It&apos;s Free
                 </div>
 
                 <h2 className="text-4xl sm:text-5xl font-black text-white leading-[1.05] tracking-tight mb-5">
@@ -62,7 +62,7 @@ export default function CTASection() {
                 </h2>
 
                 <p className="text-zinc-400 text-base leading-relaxed mb-8 max-w-md">
-                  Whether you're organizing a conference for thousands or a private dinner for twelve — Planora gives you the tools to make it happen.
+                  Whether you&apos;re organizing a conference for thousands or a private dinner for twelve — Planora gives you the tools to make it happen.
                 </p>
 
                 <div className="flex flex-wrap gap-3">
