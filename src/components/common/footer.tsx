@@ -15,6 +15,7 @@ export default function Footer() {
                 alt="Planora Logo"
                 width={162}
                 height={102}
+                className="w-auto h-auto"
               />
             </Link>
             <p className="text-zinc-500 text-sm leading-relaxed max-w-xs">

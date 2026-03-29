@@ -64,6 +64,7 @@ export default function Navbar() {
               alt="Planora Logo"
               width={162}
               height={102}
+              className="w-auto h-auto"
             />
           </Link>
 

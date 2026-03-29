@@ -70,21 +70,23 @@ export const useAuth = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { isPending, isError, data, error } = useQuery({
-    queryKey: ["auth", "me"],
-    queryFn: () => axiosInstance.get('/auth/me').then(res => res.data?.data || res.data),
+  const { isPending, isError, data } = useQuery({
+    queryKey: ['user'],
+    queryFn: async () => {
+      try {
+        const res = await axiosInstance.get("/auth/me");
+        return res.data?.data || res.data;
+      } catch (error) {
+        // Return null on 401 (not logged in)
+        return null;
+      }
+    },
     staleTime: 5 * 60 * 1000,
-    // onSuccess: (data) => {
-    //   if (data.data) {
-    //     queryClient.setQueryData(['user'], data.data);
-    //   } else {
-    //     queryClient.setQueryData(['user'], null);
-    //   }
-    // },
+    retry: false
   });
 
   const login = (userData: User) => {
-    queryClient.invalidateQueries({queryKey: ['auth', 'me']});
+    queryClient.setQueryData(['user'], userData);
     router.push("/");
   }
 
@@ -94,7 +96,8 @@ export const useAuth = () => {
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
-      queryClient.removeQueries({ queryKey: ["auth", "me"] });
+      queryClient.setQueryData(['user'], null);
+      queryClient.clear();
       router.push("/login");
     }
   };

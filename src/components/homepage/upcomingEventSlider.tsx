@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useRef } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-// import { eventService } from "@/services/event.service";
-
 import {
   Calendar,
   User,
@@ -14,6 +13,7 @@ import {
   Ticket,
 } from "lucide-react";
 import { formatDate, formatFee } from "@/src/utils/formatDate";
+import { getAllEvents } from "@/src/services/event.service";
 
 function SliderCard({ event }: { event: any }) {
   const isPaid = event.registrationFee > 0;
@@ -24,7 +24,9 @@ function SliderCard({ event }: { event: any }) {
       className="group flex-shrink-0 w-72 bg-[#111118] border border-white/5 rounded-2xl overflow-hidden hover:border-violet-500/30 hover:-translate-y-1 hover:shadow-2xl hover:shadow-violet-500/10 transition-all duration-300 flex flex-col"
     >
       {/* Colour accent top */}
-      <div className={`h-0.5 ${isPaid ? "bg-gradient-to-r from-emerald-500 to-teal-500" : "bg-gradient-to-r from-violet-500 to-indigo-500"}`} />
+      <div
+        className={`h-0.5 ${isPaid ? "bg-gradient-to-r from-violet-500 to-indigo-500" : "bg-gradient-to-r from-emerald-500 to-teal-500"}`}
+      />
 
       <div className="p-5 flex flex-col flex-1">
         {/* Fee badge */}
@@ -32,8 +34,8 @@ function SliderCard({ event }: { event: any }) {
           <span
             className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full ${
               isPaid
-                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                : "bg-violet-500/10 text-violet-400 border border-violet-500/20"
+                ? "bg-violet-500/10 text-violet-400 border border-violet-500/20"
+                : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
             }`}
           >
             <Ticket className="w-2.5 h-2.5" />
@@ -88,21 +90,20 @@ function SkeletonCard() {
 export default function UpcomingEventsSlider() {
   const sliderRef = useRef<HTMLDivElement>(null);
 
-//   const { data, isLoading } = useQuery({
-//     queryKey: ["upcoming-events-slider"],
-//     queryFn: () =>
-//       eventService.getAll({
-//         type: "PUBLIC",
-//         sortBy: "date",
-//         sortOrder: "asc",
-//         limit: 9,
-//         page: 1,
-//       }),
-//   });
+  const { data, isLoading } = useQuery({
+    queryKey: ["upcoming-events-slider"],
+    queryFn: () =>
+      getAllEvents({
+        type: "PUBLIC",
+        sortBy: "date",
+        sortOrder: "asc",
+        limit: 9,
+        page: 1,
+      }),
+  });
+  console.log(data?.data);
 
-//   const events = data?.data || [];
-  const events = UpcomingEventsSlider;
-  const isLoading = false;
+  const events = data?.data?.data || [];
 
   const scroll = (dir: "left" | "right") => {
     const el = sliderRef.current;
@@ -112,6 +113,8 @@ export default function UpcomingEventsSlider() {
 
   return (
     <section className="py-24 bg-[#0a0a0f] relative overflow-hidden">
+      {/* Radial glow top-left */}
+        <div className="absolute top-auth left-auth w-[700px] h-[700px] rounded-full bg-violet-600/10 blur-[120px]" />
       {/* Subtle section glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent" />
 
@@ -153,19 +156,19 @@ export default function UpcomingEventsSlider() {
           className="flex gap-4 overflow-x-auto pb-4 scrollbar-none snap-x snap-mandatory"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {isLoading
-            ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
-            : events.length > 0
-            ? events.map((event) => (
-                <div key={event.id} className="snap-start">
-                  <SliderCard event={event} />
-                </div>
-              ))
-            : (
-              <div className="flex-1 flex items-center justify-center py-20 text-zinc-600 text-sm">
-                No upcoming public events yet.
+          {isLoading ? (
+            Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
+          ) : events.length > 0 ? (
+            events.map((event : any) => (
+              <div key={event.id} className="snap-start">
+                <SliderCard event={event} />
               </div>
-            )}
+            ))
+          ) : (
+            <div className="flex-1 flex items-center justify-center py-20 text-zinc-600 text-sm">
+              No upcoming public events yet.
+            </div>
+          )}
         </div>
 
         {/* View all link */}
