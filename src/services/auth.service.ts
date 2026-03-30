@@ -13,3 +13,8 @@ export const registerUser = async (data: {name: string, email: string, password:
   const res = await axiosInstance.post("/auth/register", data);
   return res.data;
 };
+
+export const searchUsers = async (q: string) => {
+  const res = await axiosInstance.get(`/auth/search?q=${encodeURIComponent(q)}`);
+  return res.data?.data || [];
+};

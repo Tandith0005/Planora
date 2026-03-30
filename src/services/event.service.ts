@@ -35,6 +35,12 @@ export const getMyEvents = async () => {
   return res.data;
 };
 
+export const getMyPrivateEvents = async () => {
+  const res = await axiosInstance.get("/v1/events/my-events");
+  const all = res.data?.data || [];
+  return all.filter((e: any) => e.type === "PRIVATE");
+};
+
 export const updateEvent = async (id: string, payload: any) => {
   const res = await axiosInstance.patch(`/v1/events/${id}`, payload);
   return res.data;
