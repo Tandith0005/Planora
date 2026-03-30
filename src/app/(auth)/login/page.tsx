@@ -6,8 +6,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { CalendarDays, Eye, EyeOff, Loader2, MailCheck, AlertCircle } from "lucide-react";
+import {
+  ArrowLeft,
+  CalendarDays,
+  Eye,
+  EyeOff,
+  Loader2,
+  MailCheck,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/src/hooks/useAuth";
 import { loginUser } from "@/src/services/auth.service";
@@ -21,7 +27,6 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  const router = useRouter();
   const { login } = useAuth(); // Uses our custom context hook
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,22 +46,26 @@ export default function LoginPage() {
 
     try {
       const response = await loginUser(data);
-      
+
       // Backend returns: { success: true, data: { user, accessToken } }
       const { user } = response.data;
 
       // Update global auth state (sets cookie/localStorage and redirects)
       login(user);
-      
-      toast.success("Welcome back!");
 
+      toast.success("Welcome back!");
     } catch (error: any) {
       console.log(error);
-      const errorMessage = error.response?.data?.message || "Login failed. Please check your credentials.";
-      
+      const errorMessage =
+        error.response?.data?.message ||
+        "Login failed. Please check your credentials.";
+
       // Check for specific "not verified" message from backend
       // Adjust the string match based on your exact backend error message
-      if (errorMessage.toLowerCase().includes("verify") || errorMessage.toLowerCase().includes("verified")) {
+      if (
+        errorMessage.toLowerCase().includes("verify") ||
+        errorMessage.toLowerCase().includes("verified")
+      ) {
         setNeedsVerification(true);
         toast.error("Email not verified. Please check your inbox.");
       } else {
@@ -71,8 +80,16 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-[#0a0a0f] px-4 pt-16">
       <div className="w-full max-w-md bg-[#111118] border border-white/10 rounded-2xl shadow-2xl shadow-black/50 p-8 relative overflow-hidden">
         {/* Background Glow */}
-        <div className="absolute -top-40 -left-40 w-[700px] h-[700px] rounded-full bg-violet-600/10 blur-[120px]" />   
-        
+        <div className="absolute -top-40 -left-40 w-[700px] h-[700px] rounded-full bg-violet-600/10 blur-[120px]" />
+        {/* Back Button */}
+        <Link
+          href="/"
+          className="absolute top-5 left-5 flex items-center gap-2 text-zinc-400 hover:text-white text-sm transition-all z-20"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Home
+        </Link>
+
         {/* Header */}
         <div className="text-center mb-8 relative z-10">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 mb-4 shadow-lg shadow-violet-500/20">
@@ -89,54 +106,76 @@ export default function LoginPage() {
           <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl flex items-start gap-3 relative z-10 animate-in fade-in slide-in-from-top-2">
             <MailCheck className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
             <div>
-              <h3 className="text-sm font-semibold text-blue-400 mb-1">Verification Required</h3>
+              <h3 className="text-sm font-semibold text-blue-400 mb-1">
+                Verification Required
+              </h3>
               <p className="text-xs text-blue-300/80 leading-relaxed">
-                Your account exists but hasn't been verified yet. Please check your email inbox (and spam folder) for the verification link sent during registration.
+                Your account exists but hasn&apos;t been verified yet. Please
+                check your email inbox (and spam folder) for the verification
+                link sent during registration.
               </p>
-              <Link 
-                href="/register" 
+              <Link
+                href="/register"
                 className="text-xs text-blue-400 hover:text-blue-300 underline mt-2 inline-block"
               >
-                Didn't receive email? Register again
+                Didn&apos;t receive email? Register again
               </Link>
             </div>
           </div>
         )}
 
         {/* Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 relative z-10">
-          
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-5 relative z-10"
+        >
           {/* Email Field */}
           <div className="space-y-1">
-            <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Email Address</label>
+            <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">
+              Email Address
+            </label>
             <input
               {...register("email")}
               type="email"
               placeholder="john@example.com"
-              className={`w-full bg-[#0a0a0f] border ${errors.email ? 'border-red-500/50' : 'border-white/10'} rounded-lg px-4 py-2.5 text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500 transition-colors`}
+              className={`w-full bg-[#0a0a0f] border ${errors.email ? "border-red-500/50" : "border-white/10"} rounded-lg px-4 py-2.5 text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500 transition-colors`}
             />
-            {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>}
+            {errors.email && (
+              <p className="text-red-400 text-xs mt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           {/* Password Field */}
           <div className="space-y-1">
-            <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Password</label>
+            <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider">
+              Password
+            </label>
             <div className="relative">
               <input
                 {...register("password")}
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
-                className={`w-full bg-[#0a0a0f] border ${errors.password ? 'border-red-500/50' : 'border-white/10'} rounded-lg px-4 py-2.5 text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500 transition-colors pr-10`}
+                className={`w-full bg-[#0a0a0f] border ${errors.password ? "border-red-500/50" : "border-white/10"} rounded-lg px-4 py-2.5 text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500 transition-colors pr-10`}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
               >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {showPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
               </button>
             </div>
-            {errors.password && <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>}
+            {errors.password && (
+              <p className="text-red-400 text-xs mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
           {/* Submit Button */}
@@ -159,8 +198,11 @@ export default function LoginPage() {
         {/* Footer */}
         <div className="mt-6 text-center relative z-10">
           <p className="text-zinc-400 text-sm">
-            Don't have an account?{" "}
-            <Link href="/register" className="text-violet-400 hover:text-violet-300 font-medium transition-colors">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/register"
+              className="text-violet-400 hover:text-violet-300 font-medium transition-colors"
+            >
               Sign Up
             </Link>
           </p>

@@ -161,6 +161,7 @@ export default function EventDetailsPage() {
         disabled: true,
         type: "neutral",
         icon: User,
+        action: null,
       };
     }
     // Highest priority: Has pending payment → allow retry
@@ -179,6 +180,7 @@ export default function EventDetailsPage() {
         disabled: true,
         type: "neutral",
         icon: Lock,
+        action: null,
       };
     }
     
@@ -188,6 +190,7 @@ export default function EventDetailsPage() {
         disabled: false,
         type: "primary",
         icon: DollarSign,
+        action: "payAndJoin" as const,
       };
     }
     return {
@@ -195,6 +198,7 @@ export default function EventDetailsPage() {
       disabled: false,
       type: "success",
       icon: CheckCircle,
+      action: "joinFree" as const,
     };
   };
 
