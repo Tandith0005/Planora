@@ -5,11 +5,13 @@ interface JoinResponse {
   success: boolean;
   message: string;
   data: {
-    participant: string;
-    checkoutSession?: {
-      url: string;
-      sessionId: string;
-    };
+    requiresPayment?: boolean;
+    eventId?: string;
+    // for free events, backend returns the participant object directly
+    id?: string;
+    userId?: string;
+    status?: string;
+    isPaid?: boolean;
   };
 }
 

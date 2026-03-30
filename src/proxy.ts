@@ -1,14 +1,25 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
  
-// This function can be marked `async` if using `await` inside
+const protectedRoutes = ['/dashboard', '/notifications']
+
 export function proxy(request: NextRequest) {
-  return NextResponse.redirect(new URL('/home', request.url))
+  const { pathname } = request.nextUrl
+  const isProtected = protectedRoutes.some(route => pathname.startsWith(route))
+
+  if (!isProtected) return NextResponse.next();
+
+  const token = request.cookies.get('accessToken')?.value;
+
+  if (!token) {
+    const loginUrl = new URL('/login', request.url)
+    loginUrl.searchParams.set('redirect', pathname)
+    return NextResponse.redirect(loginUrl)
+  }
+
+  return NextResponse.next()
 }
  
-// Alternatively, you can use a default export:
-// export default function proxy(request: NextRequest) { ... }
- 
 export const config = {
-  matcher: '/about/:path*',
-};
+  matcher: ['/dashboard/:path*', '/notifications/:path*'],
+}

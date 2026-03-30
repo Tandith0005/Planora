@@ -6,6 +6,7 @@ import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { CalendarDays, Filter, Search, X } from 'lucide-react'; // Added X icon for reset
 import { getAllEvents } from '@/src/services/event.service';
 import EventCard from '@/src/components/event/EventCard';
+import Navbar from '@/src/components/common/Navbar';
 
 function EventContent() {
   const searchParams = useSearchParams();
@@ -134,7 +135,7 @@ function EventContent() {
   const hasActiveFilters = urlSearch || urlType || urlMinFee || urlMaxFee;
 
   return (
-    <div className="container mx-auto px-4 py-8 min-h-screen pt-20">
+    <div className="container mx-auto px-4 py-8 min-h-screen pt-20 mt-10">
       {/* Header & Filters */}
       <div className="mb-8 space-y-4">
         <h1 className="text-3xl font-bold text-white mb-6">Explore Events</h1>
@@ -294,6 +295,7 @@ export default function EventPage() {
         Loading...
       </div>
     }>
+      <Navbar />
       <EventContent />
     </Suspense>
   );
