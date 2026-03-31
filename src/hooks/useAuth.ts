@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { User } from "../types";
 import axiosInstance from "../lib/axios";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 type AuthState = {
@@ -23,14 +23,14 @@ type AuthState = {
 //   useEffect(() => {
 //     const checkAuth = async () => {
 //       setIsLoading(true);
-      
+
 //       try {
 //         const res = await axiosInstance.get("/auth/me");
 //         const userData = res.data?.data || res.data;
 //         setUser(userData);
 //       // eslint-disable-next-line @typescript-eslint/no-explicit-any
 //       } catch (error: any) {
-        
+
 //         setUser(null);
 //       } finally {
 //         setIsLoading(false);
@@ -65,13 +65,12 @@ type AuthState = {
 //   };
 // };
 
-
 export const useAuth = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const { isPending, isError, data } = useQuery({
-    queryKey: ['user'],
+    queryKey: ["user"],
     queryFn: async () => {
       try {
         const res = await axiosInstance.get("/auth/me");
@@ -82,13 +81,17 @@ export const useAuth = () => {
       }
     },
     staleTime: 5 * 60 * 1000,
-    retry: false
+    retry: false,
   });
 
   const login = (userData: User) => {
-    queryClient.setQueryData(['user'], userData);
-    router.push("/");
-  }
+    queryClient.setQueryData(["user"], userData);
+    if (userData.role === "ADMIN") {
+      router.push("/admin-dashboard");
+    } else {
+      router.push("/dashboard");
+    }
+  };
 
   const logout = async () => {
     try {
@@ -96,7 +99,7 @@ export const useAuth = () => {
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
-      queryClient.setQueryData(['user'], null);
+      queryClient.setQueryData(["user"], null);
       queryClient.clear();
       router.push("/login");
     }
