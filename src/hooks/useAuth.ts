@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { User } from "../types";
 import axiosInstance from "../lib/axios";
 import { useRouter } from "next/navigation";

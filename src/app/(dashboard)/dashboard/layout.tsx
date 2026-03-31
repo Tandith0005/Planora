@@ -2,7 +2,7 @@
 "use client";
 
 import { useAuth } from "@/src/hooks/useAuth";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Sidebar from "@/src/components/layout/Sidebar";
 import { Loader2 } from "lucide-react";
@@ -10,9 +10,10 @@ import { Loader2 } from "lucide-react";
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, isPending } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (!isPending && !user) {
+    if (!isPending && !user && pathname !== "/login") {
       router.replace("/login");
     }
   }, [user, isPending, router]);

@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
-// import { eventService } from "@/services/event.service";
 
 import { Calendar, MapPin, ArrowRight, Sparkles, Users } from "lucide-react";
 import { formatDate, formatFee } from "@/src/utils/formatDate";
