@@ -115,7 +115,7 @@ const queryClient = useQueryClient();
                 <div className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-1.5 text-emerald-400">
                     <Users className="w-4 h-4" />
-                    <span>{event.participants?.length || 0} joined</span>
+                    <span>{event._count?.participants || 0} joined</span>
                   </div>
 
                   <div className="flex gap-2">

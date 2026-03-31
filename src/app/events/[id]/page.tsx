@@ -43,6 +43,10 @@ export default function EventDetailsPage() {
     "idle" | "joined" | "redirecting"
   >("idle");
 
+  const handleBack = () => {
+    router.back();
+  };
+
   const eventId = params.id as string;
 
   const {
@@ -67,6 +71,9 @@ export default function EventDetailsPage() {
         toast.success("Successfully joined the event! 🎉");
         queryClient.invalidateQueries({ queryKey: ["event", eventId] });
       }
+      // invalidate notifications so bell badge updates instantly
+      queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
     onError: (err: any) => {
       toast.error(err.response?.data?.message || "Failed to join event");
@@ -271,6 +278,13 @@ export default function EventDetailsPage() {
       <div className="absolute -top-40 -left-40 w-[700px] h-[700px] rounded-full bg-violet-600/10 blur-[120px] pointer-events-none" />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 relative z-10">
+        <button
+        onClick={handleBack}
+        className="inline-flex items-center gap-2 text-rose-400 pl-4 pr-4 border border-rose-400 rounded-xl transition-all hover:scale-105 mb-5"
+      >
+        <ArrowLeft className="w-6 h-4" />
+        Go Back
+      </button>
         {/* Main Card */}
         <div className="bg-[#111118]/90 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
           {/* ── Header ── */}

@@ -11,6 +11,7 @@ import {
   LogOut,
   Plus,
   Sparkles,
+  DoorOpen,
 } from "lucide-react";
 import { useAuth } from "@/src/hooks/useAuth";
 import Image from "next/image";
@@ -29,9 +30,14 @@ export default function Sidebar() {
 
   const isActive = (href: string) => pathname === href;
 
-  const adminLink = user?.role === "ADMIN" 
-    ? { href: "/admin-dashboard", label: "Admin Dashboard", icon: LayoutDashboard }
-    : null;
+  const adminLink =
+    user?.role === "ADMIN"
+      ? {
+          href: "/admin-dashboard",
+          label: "Admin Dashboard",
+          icon: LayoutDashboard,
+        }
+      : null;
 
   if (isPending) {
     return (
@@ -40,7 +46,9 @@ export default function Sidebar() {
           <div className="w-16 h-16 border-4 border-violet-500/20 border-t-violet-500 rounded-full animate-spin" />
           <Sparkles className="w-6 h-6 text-violet-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse" />
         </div>
-        <p className="text-violet-400 mt-4 animate-pulse">Loading amazing event details...</p>
+        <p className="text-violet-400 mt-4 animate-pulse">
+          Loading amazing event details...
+        </p>
       </div>
     );
   }
@@ -50,13 +58,13 @@ export default function Sidebar() {
       {/* Logo */}
       <Link href="/" className="flex items-center gap-2 p-4">
         <Image
-        src="/SidebarLogo.jpg"
-        alt="Planora Logo"
-        width={162}
-        height={102}
-        loading="eager"
-        className="w-52 h-auto mx-auto m-5"
-      />
+          src="/SidebarLogo.jpg"
+          alt="Planora Logo"
+          width={162}
+          height={102}
+          loading="eager"
+          className="w-52 h-auto mx-auto m-5"
+        />
       </Link>
 
       {/* Navigation */}
@@ -90,6 +98,14 @@ export default function Sidebar() {
             );
           })}
 
+          <Link
+            href="/"
+            className="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium text-rose-400 hover:bg-rose-500/10 hover:text-white transition-all"
+          >
+            <DoorOpen className="w-5 h-5" />
+            Back to Home
+          </Link>
+
           {/* Dynamic Admin Dashboard Link */}
           {user?.role === "ADMIN" && adminLink && (
             <Link
@@ -104,7 +120,6 @@ export default function Sidebar() {
               {adminLink.label}
             </Link>
           )}
-
         </nav>
       </div>
 

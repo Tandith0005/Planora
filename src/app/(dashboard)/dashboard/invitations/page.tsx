@@ -257,6 +257,7 @@ function MyInvitationsTab() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["my-invitations"] });
       queryClient.invalidateQueries({ queryKey: ["notifications-count"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
 
       if (data?.requiresPayment) {
         toast("Invitation accepted! Complete payment to confirm your spot.", { icon: "💳" });
