@@ -31,6 +31,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [needsVerification, setNeedsVerification] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const {
     register,
@@ -39,6 +40,7 @@ export default function LoginPage() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
+  
 
   const onSubmit = async (data: LoginFormData) => {
     setIsSubmitting(true);
@@ -49,6 +51,7 @@ export default function LoginPage() {
       const { user, accessToken, refreshToken } = response.data;
       login(user, { accessToken, refreshToken });
 
+      setIsRedirecting(true);
       toast.success("Welcome back!");
     } catch (error: any) {
       console.log(error);
@@ -69,8 +72,20 @@ export default function LoginPage() {
       }
     } finally {
       setIsSubmitting(false);
+      if (!isRedirecting) setIsSubmitting(false);
     }
   };
+
+  if (isRedirecting) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#0a0a0f]">
+      <div className="flex flex-col items-center gap-4">
+        <Loader2 className="w-8 h-8 text-violet-400 animate-spin" />
+        <p className="text-zinc-400 text-sm">Redirecting...</p>
+      </div>
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0a0a0f] px-4 pt-16">
