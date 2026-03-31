@@ -1,6 +1,6 @@
 
 export const FeaturedEvent = {
-  id: "evt-001",
+  id: "a02811d4-d3b5-4e47-aca2-15fb790a426b",
   title: "National Tech Summit 2026",
   description: "Join Bangladesh's biggest technology conference featuring industry leaders, AI workshops, and networking opportunities with top companies.",
   date: "2026-04-15T09:00:00Z",
