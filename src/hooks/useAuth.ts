@@ -5,6 +5,7 @@ import { User } from "../types";
 import axiosInstance from "../lib/axios";
 import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { tokenStore } from "../lib/tokenStore";
 
 type AuthState = {
   user: User | null;
@@ -84,26 +85,28 @@ export const useAuth = () => {
     retry: false,
   });
 
-  const login = (userData: User) => {
-    queryClient.setQueryData(["user"], userData);
-    if (userData.role === "ADMIN") {
-      router.push("/admin-dashboard");
-    } else {
-      router.push("/dashboard");
-    }
-  };
+  const login = (userData: User, tokens: { accessToken: string; refreshToken: string }) => {
+  tokenStore.setTokens(tokens.accessToken, tokens.refreshToken);
+  queryClient.setQueryData(['user'], userData);
+  if (userData.role === "ADMIN") {
+    router.push("/admin-dashboard");
+  } else {
+    router.push("/dashboard");
+  }
+};
 
   const logout = async () => {
-    try {
-      await axiosInstance.post("/auth/logout");
-    } catch (error) {
-      console.error("Logout error:", error);
-    } finally {
-      queryClient.setQueryData(["user"], null);
-      queryClient.clear();
-      router.push("/login");
-    }
-  };
+  try {
+    await axiosInstance.post("/auth/logout");
+  } catch (error) {
+    console.error("Logout error:", error);
+  } finally {
+    tokenStore.clear();
+    queryClient.setQueryData(['user'], null);
+    queryClient.clear();
+    router.push("/login");
+  }
+};
 
   return {
     user: data || null,

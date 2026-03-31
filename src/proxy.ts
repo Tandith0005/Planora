@@ -14,28 +14,28 @@ function getRoleFromToken(token: string): string | null {
 }
 
 export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  // const { pathname } = request.nextUrl;
 
-  const isProtected = protectedRoutes.some((route) =>
-    pathname.startsWith(route)
-  );
+  // const isProtected = protectedRoutes.some((route) =>
+  //   pathname.startsWith(route)
+  // );
 
-  if (!isProtected) return NextResponse.next();
+  // if (!isProtected) return NextResponse.next();
 
-  const token = request.cookies.get("accessToken")?.value;
+  // const token = request.cookies.get("accessToken")?.value;
 
-  if (!token) {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(loginUrl);
-  }
+  // if (!token) {
+  //   const loginUrl = new URL("/login", request.url);
+  //   loginUrl.searchParams.set("redirect", pathname);
+  //   return NextResponse.redirect(loginUrl);
+  // }
 
-  const role = getRoleFromToken(token);
+  // const role = getRoleFromToken(token);
 
   // Non-admin trying to access /admin
-  if (pathname.startsWith("/admin-dashboard") && role !== "ADMIN") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
+  // if (pathname.startsWith("/admin-dashboard") && role !== "ADMIN") {
+  //   return NextResponse.redirect(new URL("/dashboard", request.url));
+  // }
 
   // Admin trying to access /dashboard — send to admin panel
   
@@ -44,5 +44,6 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/admin-dashboard/:path*", "/notifications/:path*"],
+  // matcher: ["/dashboard/:path*", "/admin-dashboard/:path*", "/notifications/:path*"],
+  matcher: [],
 };

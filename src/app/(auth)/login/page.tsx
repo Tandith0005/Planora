@@ -46,12 +46,8 @@ export default function LoginPage() {
 
     try {
       const response = await loginUser(data);
-
-      // Backend returns: { success: true, data: { user, accessToken } }
-      const { user } = response.data;
-
-      // Update global auth state (sets cookie/localStorage and redirects)
-      login(user);
+      const { user, accessToken, refreshToken } = response.data;
+      login(user, { accessToken, refreshToken });
 
       toast.success("Welcome back!");
     } catch (error: any) {
