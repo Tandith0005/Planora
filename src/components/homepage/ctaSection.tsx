@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, Plus, Users, Zap, Shield, Globe } from "lucide-react";
-
+import { useRef } from "react";
+import { useCTASectionAnimation } from "@/src/hooks/animations/useCTASectionAnimation";
 
 const FEATURES = [
   {
@@ -21,8 +24,22 @@ const FEATURES = [
 ];
 
 export default function CTASection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const leftRef = useRef<HTMLDivElement>(null);
+  const featuresRef = useRef<HTMLDivElement>(null);
+
+  // Animation hook
+  useCTASectionAnimation({
+    sectionRef,
+    leftRef,
+    featuresRef,
+  });
+
   return (
-    <section className="py-24 bg-[#0a0a0f] relative overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="py-24 bg-[#0a0a0f] relative overflow-hidden"
+    >
       {/* Top divider */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
 
@@ -31,7 +48,6 @@ export default function CTASection() {
       <div className="absolute top-0 left-0 w-[400px] h-[400px] rounded-full bg-indigo-600/5 blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
         {/* Main CTA block */}
         <div className="relative rounded-3xl overflow-hidden border border-white/8">
           {/* BG gradient */}
@@ -48,8 +64,9 @@ export default function CTASection() {
 
           <div className="relative z-10 px-8 sm:px-12 lg:px-16 py-16">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              
               {/* Left copy */}
-              <div>
+              <div ref={leftRef}>
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold mb-6">
                   ✦ Start Today — It&apos;s Free
                 </div>
@@ -85,11 +102,11 @@ export default function CTASection() {
               </div>
 
               {/* Right: feature cards */}
-              <div className="space-y-4">
-                {FEATURES.map(({ icon: Icon, title, description }) => (
+              <div ref={featuresRef} className="space-y-4">
+                {FEATURES.map(({ icon: Icon, title, description }, index) => (
                   <div
                     key={title}
-                    className="flex items-start gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-violet-500/20 hover:bg-white/[0.05] transition-all duration-200 group"
+                    className="feature-card flex items-start gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-violet-500/20 hover:bg-white/[0.05] transition-all duration-200 group"
                   >
                     <div className="w-9 h-9 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-violet-500/20 transition-colors">
                       <Icon className="w-4 h-4 text-violet-400" />

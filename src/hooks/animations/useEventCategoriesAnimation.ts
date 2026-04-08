@@ -36,7 +36,7 @@ export function useEventCategoriesAnimation({
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 85%",
+          start: "top 50%",
           once: true,
         },
       });
